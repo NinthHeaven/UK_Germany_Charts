@@ -230,8 +230,11 @@ uk2010_data <- as.data.frame(split(uk2010_hits, 1:3)) %>%
          artist = X2,
          title = X3)
 
-# Testing the Germany data set
+# This throws an error
+# test_tracks <- map(uk_2000_data$artist, get_artist_audio_features)
 
+uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
+my_tracks <- get_playlist_tracks(uk_2000)
 ```
 
 # Data Gathered Thus Far
