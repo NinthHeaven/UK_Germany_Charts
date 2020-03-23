@@ -14,6 +14,7 @@ library(lubridate)
 library(readxl)
 library(janitor)
 library(rvest)
+library(infer)
 Sys.setenv(SPOTIFY_CLIENT_ID = '1ebacb60ef2044ccadab18602f7c0b8f')
 Sys.setenv(SPOTIFY_CLIENT_SECRET = '6fb54464f8dc45c88387a4fadde775db')
 
@@ -234,7 +235,44 @@ uk2010_data <- as.data.frame(split(uk2010_hits, 1:3)) %>%
 # test_tracks <- map(uk_2000_data$artist, get_artist_audio_features)
 
 uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
-my_tracks <- get_playlist_tracks(uk_2000)
+ # This throws an error 
+# my_tracks <- get_playlist_tracks(uk_2000)
+
+testing <- map(top_200_2020_uk$track_name, ~ get_track_audio_features)
+
+
+# This will be something I would like to do with the 2000-2010 data. Here is a
+# demo with the Spotify Top 200 playlist that I would want to replicate with my
+# own data. The problem with my data currently is that the function that should
+# be working isn't, and every spotify tutorial uses the same method as mine.
+# Also, I do not have access to the Spotify UK/GER markets, so there are songs
+# that I am missing from my top playlists. Most of the data I gathered will be
+# in the playlists themselves, and I am still trying to figure out how to clean
+# up the GER data so I can easily display it somewhere on the website.
+
+same_tracks_2020 <- top_200_2020_uk %>%
+  inner_join(top_200_2020_ger, by = c("track_name", "artist", "year"))
+
+same_tracks_2019 <- top_200_2019_uk %>%
+  inner_join(top_200_2019_ger, by = c("track_name", "artist", "year"))
+
+same_tracks_2018 <- top_200_2018_uk %>%
+  inner_join(top_200_2018_ger, by = c("track_name", "artist", "year"))
+
+same_tracks_2017 <- top_200_2017_uk %>%
+  inner_join(top_200_2017_ger, by = c("track_name", "artist", "year"))
+
+
+ggplot(same_tracks_2020, aes(year)) +
+  geom_bar() +
+  geom_bar(data = same_tracks_2019) +
+  geom_bar(data = same_tracks_2018) +
+  geom_bar(data = same_tracks_2017) +
+  theme_classic() +
+  labs(title = "Number of Top Songs in Both Germany and UK",
+       subtitle = "By Spotify daily stream",
+       x = "Year",
+       y = "Number of Songs")
 ```
 
 # Data Gathered Thus Far
