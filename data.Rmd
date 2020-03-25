@@ -236,9 +236,26 @@ uk2010_data <- as.data.frame(split(uk2010_hits, 1:3)) %>%
 
 uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
  # This throws an error 
-# my_tracks <- get_playlist_tracks(uk_2000)
+my_tracks <- get_playlist_tracks("7uQBCcnNuxOBv0jFbEcYjH")
+testing <- get_track_audio_features(my_tracks$track.id)
 
 testing <- map(top_200_2020_uk$track_name, ~ get_track_audio_features)
+
+ger2000_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2000" %>%
+  read_html()
+
+ger2000_hits <- html_nodes(ger2000_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("\\n+", "")%>%
+  trimws()%>%
+  tibble()
+
+colnames(ger2000_hits)<-c("Column")
+
+ger2000_hits<- ger2000_hits %>% 
+  mutate(Names=str_split(Column,"\\s{36}"))
+
+ger2000_hits <- data.frame(matrix(unlist(ger2000_hits$Names), nrow=100, byrow=T),stringsAsFactors=FALSE)
 
 
 # This will be something I would like to do with the 2000-2010 data. Here is a
