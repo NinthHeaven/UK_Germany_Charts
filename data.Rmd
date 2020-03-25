@@ -239,7 +239,10 @@ uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
 my_tracks <- get_playlist_tracks("7uQBCcnNuxOBv0jFbEcYjH")
 testing <- get_track_audio_features(my_tracks$track.id)
 
-testing <- map(top_200_2020_uk$track_name, ~ get_track_audio_features)
+# Map function that iterates over every row in track.artists, getting the id and
+# feeding it into the get_artist function
+
+my_tracks$track.artists[[1]][[2]]
 
 ger2000_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2000" %>%
   read_html()
