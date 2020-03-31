@@ -258,8 +258,23 @@ colnames(ger2000_hits)<-c("Column")
 ger2000_hits<- ger2000_hits %>% 
   mutate(Names=str_split(Column,"\\s{36}"))
 
-ger2000_hits <- data.frame(matrix(unlist(ger2000_hits$Names), nrow=100, byrow=T),stringsAsFactors=FALSE)
+ger2000_data <- data.frame(matrix(unlist(ger2000_hits$Names), nrow=100, byrow=T),stringsAsFactors=FALSE)
 
+ger2001_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2001" %>%
+  read_html()
+
+ger2001_hits <- html_nodes(ger2001_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2001_hits)<-c("Column")
+
+ger2001_hits <- ger2001_hits %>%
+  mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2001_data <- data.frame(matrix(unlist(ger2001_hits$Names), nrow=100, byrow = T), stringsAsFactors = FALSE)
 
 # This will be something I would like to do with the 2000-2010 data. Here is a
 # demo with the Spotify Top 200 playlist that I would want to replicate with my
