@@ -15,6 +15,7 @@ library(readxl)
 library(janitor)
 library(rvest)
 library(infer)
+library(magrittr)
 Sys.setenv(SPOTIFY_CLIENT_ID = '1ebacb60ef2044ccadab18602f7c0b8f')
 Sys.setenv(SPOTIFY_CLIENT_SECRET = '6fb54464f8dc45c88387a4fadde775db')
 
@@ -275,6 +276,150 @@ ger2001_hits <- ger2001_hits %>%
   mutate(Names=str_split(Column, "\\s{36}"))
 
 ger2001_data <- data.frame(matrix(unlist(ger2001_hits$Names), nrow=100, byrow = T), stringsAsFactors = FALSE)
+
+ger2002_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2002" %>%
+  read_html()
+
+ger2002_hits <- html_nodes(ger2002_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2002_hits)<-c("Column")
+
+ger2002_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2002_data <- data.frame(matrix(unlist(ger2002_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2003_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2003" %>%
+  read_html()
+
+ger2003_hits <- html_nodes(ger2003_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2003_hits)<-c("Column")
+
+ger2003_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2003_data <- data.frame(matrix(unlist(ger2003_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2004_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2004" %>%
+  read_html()
+
+ger2004_hits <- html_nodes(ger2004_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2004_hits)<-c("Column")
+
+ger2004_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2004_data <- data.frame(matrix(unlist(ger2004_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2005_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2005" %>%
+  read_html()
+
+ger2005_hits <- html_nodes(ger2005_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2005_hits)<-c("Column")
+
+ger2005_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2005_data <- data.frame(matrix(unlist(ger2005_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2006_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2006" %>%
+  read_html()
+
+ger2006_hits <- html_nodes(ger2006_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2006_hits)<-c("Column")
+
+ger2006_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2006_data <- data.frame(matrix(unlist(ger2006_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2007_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2007" %>%
+  read_html()
+
+ger2007_hits <- html_nodes(ger2007_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2007_hits)<-c("Column")
+
+ger2007_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2007_data <- data.frame(matrix(unlist(ger2007_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2008_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2008" %>%
+  read_html()
+
+ger2008_hits <- html_nodes(ger2008_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2008_hits)<-c("Column")
+
+ger2008_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2008_data <- data.frame(matrix(unlist(ger2008_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2009_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2009" %>%
+  read_html()
+
+ger2009_hits <- html_nodes(ger2009_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2009_hits)<-c("Column")
+
+ger2009_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2009_data <- data.frame(matrix(unlist(ger2009_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
+
+ger2010_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2010" %>%
+  read_html()
+
+ger2010_hits <- html_nodes(ger2010_hits, ".year-mode") %>%
+  html_text() %>%
+  str_replace_all("//n+", "") %>%
+  trimws() %>%
+  tibble()
+
+colnames(ger2010_hits)<-c("Column")
+
+ger2010_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
+
+ger2010_data <- data.frame(matrix(unlist(ger2010_hits$Names), nrow=100,
+                                  byrow = T), stringsAsFactors = FALSE)
 
 # This will be something I would like to do with the 2000-2010 data. Here is a
 # demo with the Spotify Top 200 playlist that I would want to replicate with my
