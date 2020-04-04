@@ -19,6 +19,7 @@ library(magrittr)
 library(hrbrthemes)
 library(extrafont)
 font_import()
+hrbrthemes::import_roboto_condensed()
 loadfonts(device = "win")
 Sys.setenv(SPOTIFY_CLIENT_ID = '1ebacb60ef2044ccadab18602f7c0b8f')
 Sys.setenv(SPOTIFY_CLIENT_SECRET = '6fb54464f8dc45c88387a4fadde775db')
@@ -463,6 +464,18 @@ danceability_uk_2000_test <- testing %>%
   ggplot(aes(danceability)) +
   geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
   ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2000_test <- testing %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2000_test <- testing %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
   theme_ipsum(base_family = "Calibri")
 
 danceability_uk_2000_test

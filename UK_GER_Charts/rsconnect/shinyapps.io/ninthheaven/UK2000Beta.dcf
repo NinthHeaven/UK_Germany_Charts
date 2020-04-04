@@ -1,0 +1,12 @@
+name: UK2000Beta
+title: UK2000Beta
+username:
+account: ninthheaven
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2055014
+bundleId: 2967111
+url: https://ninthheaven.shinyapps.io/UK2000Beta/
+when: 1585969589.21622
+asMultiple: FALSE
+asStatic: FALSE
