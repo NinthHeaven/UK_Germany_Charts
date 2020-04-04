@@ -16,6 +16,7 @@ library(janitor)
 library(rvest)
 library(infer)
 library(magrittr)
+library(hrbrthemes)
 Sys.setenv(SPOTIFY_CLIENT_ID = '1ebacb60ef2044ccadab18602f7c0b8f')
 Sys.setenv(SPOTIFY_CLIENT_SECRET = '6fb54464f8dc45c88387a4fadde775db')
 
@@ -453,6 +454,15 @@ ggplot(same_tracks_2020, aes(year)) +
        subtitle = "By Spotify daily stream",
        x = "Year",
        y = "Number of Songs")
+
+# Demoing the graphs feature for further use
+danceability_uk_2000_test <- testing %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08") +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum()
+
+danceability_uk_2000_test
 ```
 
 # Data Gathered Thus Far
