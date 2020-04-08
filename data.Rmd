@@ -264,7 +264,8 @@ colnames(ger2000_hits)<-c("Column")
 ger2000_hits<- ger2000_hits %>% 
   mutate(Names=str_split(Column,"\\s{36}"))
 
-ger2000_data <- data.frame(matrix(unlist(ger2000_hits$Names), nrow=100, byrow=T),stringsAsFactors=FALSE)
+ger2000_data <- data.frame(matrix(unlist(ger2000_hits$Names),
+                                  nrow=100, byrow=T),stringsAsFactors=FALSE)
 
 ger2001_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2001" %>%
   read_html()
@@ -280,7 +281,10 @@ colnames(ger2001_hits)<-c("Column")
 ger2001_hits <- ger2001_hits %>%
   mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2001_data <- data.frame(matrix(unlist(ger2001_hits$Names), nrow=100, byrow = T), stringsAsFactors = FALSE)
+ger2001_data <- data.frame(matrix(unlist(ger2001_hits$Names),
+                                  nrow=100,
+                                  byrow = T),
+                           stringsAsFactors = FALSE)
 
 ger2002_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2002" %>%
   read_html()
@@ -295,8 +299,10 @@ colnames(ger2002_hits)<-c("Column")
 
 ger2002_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2002_data <- data.frame(matrix(unlist(ger2002_hits$Names), nrow=100,
-                                  byrow = T), stringsAsFactors = FALSE)
+ger2002_data <- data.frame(matrix(unlist(ger2002_hits$Names),
+                                  nrow=100,
+                                  byrow = T),
+                           stringsAsFactors = FALSE)
 
 ger2003_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2003" %>%
   read_html()
@@ -311,8 +317,10 @@ colnames(ger2003_hits)<-c("Column")
 
 ger2003_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2003_data <- data.frame(matrix(unlist(ger2003_hits$Names), nrow=100,
-                                  byrow = T), stringsAsFactors = FALSE)
+ger2003_data <- data.frame(matrix(unlist(ger2003_hits$Names),
+                                  nrow=100,
+                                  byrow = T),
+                           stringsAsFactors = FALSE)
 
 ger2004_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2004" %>%
   read_html()
@@ -327,8 +335,10 @@ colnames(ger2004_hits)<-c("Column")
 
 ger2004_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2004_data <- data.frame(matrix(unlist(ger2004_hits$Names), nrow=100,
-                                  byrow = T), stringsAsFactors = FALSE)
+ger2004_data <- data.frame(matrix(unlist(ger2004_hits$Names),
+                                  nrow=100,
+                                  byrow = T),
+                           stringsAsFactors = FALSE)
 
 ger2005_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2005" %>%
   read_html()
@@ -343,8 +353,10 @@ colnames(ger2005_hits)<-c("Column")
 
 ger2005_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2005_data <- data.frame(matrix(unlist(ger2005_hits$Names), nrow=100,
-                                  byrow = T), stringsAsFactors = FALSE)
+ger2005_data <- data.frame(matrix(unlist(ger2005_hits$Names),
+                                  nrow=100,
+                                  byrow = T),
+                           stringsAsFactors = FALSE)
 
 ger2006_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2006" %>%
   read_html()
@@ -359,8 +371,10 @@ colnames(ger2006_hits)<-c("Column")
 
 ger2006_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2006_data <- data.frame(matrix(unlist(ger2006_hits$Names), nrow=100,
-                                  byrow = T), stringsAsFactors = FALSE)
+ger2006_data <- data.frame(matrix(unlist(ger2006_hits$Names),
+                                  nrow=100,
+                                  byrow = T),
+                           stringsAsFactors = FALSE)
 
 ger2007_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2007" %>%
   read_html()
@@ -375,7 +389,8 @@ colnames(ger2007_hits)<-c("Column")
 
 ger2007_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2007_data <- data.frame(matrix(unlist(ger2007_hits$Names), nrow=100,
+ger2007_data <- data.frame(matrix(unlist(ger2007_hits$Names),
+                                  nrow=100,
                                   byrow = T), stringsAsFactors = FALSE)
 
 ger2008_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2008" %>%
@@ -391,7 +406,8 @@ colnames(ger2008_hits)<-c("Column")
 
 ger2008_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2008_data <- data.frame(matrix(unlist(ger2008_hits$Names), nrow=100,
+ger2008_data <- data.frame(matrix(unlist(ger2008_hits$Names),
+                                  nrow=100,
                                   byrow = T), stringsAsFactors = FALSE)
 
 ger2009_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2009" %>%
@@ -407,7 +423,8 @@ colnames(ger2009_hits)<-c("Column")
 
 ger2009_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2009_data <- data.frame(matrix(unlist(ger2009_hits$Names), nrow=100,
+ger2009_data <- data.frame(matrix(unlist(ger2009_hits$Names),
+                                  nrow=100,
                                   byrow = T), stringsAsFactors = FALSE)
 
 ger2010_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2010" %>%
@@ -423,7 +440,8 @@ colnames(ger2010_hits)<-c("Column")
 
 ger2010_hits %<>% mutate(Names=str_split(Column, "\\s{36}"))
 
-ger2010_data <- data.frame(matrix(unlist(ger2010_hits$Names), nrow=100,
+ger2010_data <- data.frame(matrix(unlist(ger2010_hits$Names),
+                                  nrow=100,
                                   byrow = T), stringsAsFactors = FALSE)
 
 # This will be something I would like to do with the 2000-2010 data. Here is a
