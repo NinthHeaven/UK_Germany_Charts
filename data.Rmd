@@ -18,9 +18,6 @@ library(infer)
 library(magrittr)
 library(hrbrthemes)
 library(extrafont)
-font_import()
-hrbrthemes::import_roboto_condensed()
-loadfonts(device = "win")
 Sys.setenv(SPOTIFY_CLIENT_ID = '1ebacb60ef2044ccadab18602f7c0b8f')
 Sys.setenv(SPOTIFY_CLIENT_SECRET = '6fb54464f8dc45c88387a4fadde775db')
 
@@ -453,6 +450,99 @@ ger2010_data <- data.frame(matrix(unlist(ger2010_hits$Names),
 # in the playlists themselves, and I am still trying to figure out how to clean
 # up the GER data so I can easily display it somewhere on the website.
 
+# Here I will get the audio features for every year in both uk and germany.
+
+uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
+uk2000_tracks <- get_playlist_tracks("7uQBCcnNuxOBv0jFbEcYjH")
+uk2000_features <- get_track_audio_features(uk2000_tracks$track.id)
+
+uk_2001 <- get_playlist("28MXvLEP4jZ6c5kVIP8ke5")
+uk2001_tracks <- get_playlist_tracks("28MXvLEP4jZ6c5kVIP8ke5")
+uk2001_features <- get_track_audio_features(uk2001_tracks$track.id)
+
+uk2002 <- get_playlist("7vQW2yhyPeUys745cjd4qW")
+uk2002_tracks <- get_playlist_tracks("7vQW2yhyPeUys745cjd4qW")
+uk2002_features <- get_track_audio_features(uk2002_tracks$track.id)
+
+uk2003 <- get_playlist("7ajCdWcuELFirRcGl9LKsv")
+uk2003_tracks <- get_playlist_tracks("7ajCdWcuELFirRcGl9LKsv")
+uk2003_features <- get_track_audio_features(uk2003_tracks$track.id)
+
+# Start here
+
+uk2004 <- get_playlist("4d9CrfTDJ7WgDXL7xy4gnu")
+uk2004_tracks <- get_playlist_tracks("4d9CrfTDJ7WgDXL7xy4gnu")
+uk2004_features <- get_track_audio_features(uk2004_tracks$track.id)
+
+uk2005 <- get_playlist("2luAWE5y4EjcF3eeecXqqL")
+uk2005_tracks <- get_playlist_tracks("2luAWE5y4EjcF3eeecXqqL")
+uk2005_features <- get_track_audio_features(uk2005_tracks$track.id)
+
+uk2006 <- get_playlist("246jBtzSV8noLKfwPhxK9L")
+uk2006_tracks <- get_playlist_tracks("246jBtzSV8noLKfwPhxK9L")
+uk2006_features <- get_track_audio_features(uk2006_tracks$track.id)
+
+uk2007 <- get_playlist("41tjYI2R4zuKCR6Jpkcurs")
+uk2007_tracks <- get_playlist_tracks("41tjYI2R4zuKCR6Jpkcurs")
+uk2007_features <- get_track_audio_features(uk2007_tracks$track.id)
+
+uk2008 <- get_playlist("2e6HTZLlouOqvX2hFfrK7M")
+uk2008_tracks <- get_playlist_tracks("2e6HTZLlouOqvX2hFfrK7M")
+uk2008_features <- get_track_audio_features(uk2008_tracks$track.id)
+
+uk2009 <- get_playlist("36Wp100hDpZ39S7rAkeW2B")
+uk2009_tracks <- get_playlist_tracks("36Wp100hDpZ39S7rAkeW2B")
+uk2009_features <- get_track_audio_features(uk2009_tracks$track.id)
+
+uk2010 <- get_playlist("1oFHWJu7rH78TBCxbUvLne")
+uk2010_tracks <- get_playlist_tracks("1oFHWJu7rH78TBCxbUvLne")
+uk2010_features <- get_track_audio_features(uk2010_tracks$track.id)
+
+ger2000 <- get_playlist("3mwXtmIDVIImnHEhF25aXk")
+ger2000_tracks <- get_playlist_tracks("3mwXtmIDVIImnHEhF25aXk")
+ger2000_features <- get_track_audio_features(ger2000_tracks$track.id)
+
+ger2001 <- get_playlist("5Xl6JK20GTICxAQsMjrp93")
+ger2001_tracks <- get_playlist_tracks("5Xl6JK20GTICxAQsMjrp93")
+ger2001_features <- get_track_audio_features(ger2001_tracks$track.id)
+
+ger2002 <- get_playlist("4pN5sDpaQn5pGVJQJ8Nm7j")
+ger2002_tracks <- get_playlist_tracks("4pN5sDpaQn5pGVJQJ8Nm7j")
+ger2002_features <- get_track_audio_features(ger2002_tracks$track.id)
+
+ger2003 <- get_playlist("4CfPTjH2UOLZr3FjtbmnPB")
+ger2003_tracks <- get_playlist_tracks("4CfPTjH2UOLZr3FjtbmnPB")
+ger2003_features <- get_track_audio_features(ger2003_tracks$track.id)
+
+ger2004 <- get_playlist("6RsriY4UcnhHpKNoeVYbu4")
+ger2004_tracks <- get_playlist_tracks("6RsriY4UcnhHpKNoeVYbu4")
+ger2004_features <- get_track_audio_features(ger2004_tracks$track.id)
+
+ger2005 <- get_playlist("2nfm7TsAcuHr7p1MrOFKcw")
+ger2005_tracks <- get_playlist_tracks("2nfm7TsAcuHr7p1MrOFKcw")
+ger2005_features <- get_track_audio_features(ger2005_tracks$track.id)
+
+ger2006 <- get_playlist("77N8qjXKrsVVMv8hI8jNxG")
+ger2006_tracks <- get_playlist_tracks("77N8qjXKrsVVMv8hI8jNxG")
+ger2006_features <- get_track_audio_features(ger2006_tracks$track.id)
+
+ger2007 <- get_playlist("4mwHWiCKwzdIx3ANL19vRY")
+ger2007_tracks <- get_playlist_tracks("4mwHWiCKwzdIx3ANL19vRY")
+ger2007_features <- get_track_audio_features(ger2007_tracks$track.id)
+
+ger2008 <- get_playlist("3o5sU5OWHsFsbh9FXjYQKE")
+ger2008_tracks <- get_playlist_tracks("3o5sU5OWHsFsbh9FXjYQKE")
+ger2008_features <- get_track_audio_features(ger2008_tracks$track.id)
+
+ger2009 <- get_playlist("1teQpbhtQztADlDeANRwUs")
+ger2009_tracks <- get_playlist_tracks("1teQpbhtQztADlDeANRwUs")
+ger2009_features <- get_track_audio_features(ger2009_tracks$track.id)
+
+ger2010 <- get_playlist("1RZV5fBYJUEfeYbT9kiDnk")
+ger2010_tracks <- get_playlist_tracks("1RZV5fBYJUEfeYbT9kiDnk")
+ger2010_features <- get_track_audio_features(ger2010_tracks$track.id)
+
+
 same_tracks_2020 <- top_200_2020_uk %>%
   inner_join(top_200_2020_ger, by = c("track_name", "artist", "year"))
 
@@ -465,6 +555,407 @@ same_tracks_2018 <- top_200_2018_uk %>%
 same_tracks_2017 <- top_200_2017_uk %>%
   inner_join(top_200_2017_ger, by = c("track_name", "artist", "year"))
 
+# Here I store all the danceability, valence, and tempo features per year.
+
+danceability_uk_2000 <- uk2000_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2000 <- uk2000_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2000 <- uk2000_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2001 <- uk2001_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2001 <- uk2001_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2001 <- uk2001_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2002 <- uk2002_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2002 <- uk2002_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2002 <- uk2002_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2003 <- uk2003_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2003 <- uk2003_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2003 <- uk2003_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2004 <- uk2004_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2004 <- uk2004_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2004 <- uk2004_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2005 <- uk2005_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2005 <- uk2005_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2005 <- uk2005_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2006 <- uk2006_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2006 <- uk2006_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2006 <- uk2006_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2007 <- uk2007_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2007 <- uk2007_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2007 <- uk2007_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2008 <- uk2008_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2008 <- uk2008_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2008 <- uk2008_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2009 <- uk2009_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2009 <- uk2009_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2009 <- uk2009_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_uk_2010 <- uk2010_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_uk_2010 <- uk2010_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri") 
+
+tempo_uk_2010 <- uk2010_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+# Here are the germany datas
+
+danceability_ger_2000 <- ger2000_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2000 <- ger2000_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2000 <- ger2000_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2001 <- ger2001_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2001 <- ger2001_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2001 <- ger2001_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2002 <- ger2002_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2002 <- ger2002_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2002 <- ger2002_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2003 <- ger2003_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2003 <- ger2003_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2003 <- ger2003_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2004 <- ger2004_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2004 <- ger2004_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2004 <- ger2004_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2005 <- ger2005_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2005 <- ger2005_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2005 <- ger2005_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2006 <- ger2006_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2006 <- ger2006_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2006 <- ger2006_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2007 <- ger2007_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2007 <- ger2007_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2007 <- ger2007_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2008 <- ger2008_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2008 <- ger2008_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2008 <- ger2008_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2009 <- ger2009_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2009 <- ger2009_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2009 <- ger2009_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+danceability_ger_2010 <- ger2010_features %>%
+  ggplot(aes(danceability)) +
+  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+  ggtitle("Danceability Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+valence_ger_2010 <- ger2010_features %>%
+  ggplot(aes(valence)) +
+  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+  ggtitle("Valence Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+tempo_ger_2010 <- ger2010_features %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  ggtitle("Tempo Distribution in UK Charts 2000") +
+  theme_ipsum(base_family = "Calibri")
+
+# Sample plot graph for genres
 
 ggplot(same_tracks_2020, aes(year)) +
   geom_bar() +
@@ -476,27 +967,6 @@ ggplot(same_tracks_2020, aes(year)) +
        subtitle = "By Spotify daily stream",
        x = "Year",
        y = "Number of Songs")
-
-# Demoing the graphs feature for further use
-danceability_uk_2000_test <- testing %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2000_test <- testing %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2000") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2000_test <- testing %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2000_test
 ```
 
 # Data Gathered Thus Far
