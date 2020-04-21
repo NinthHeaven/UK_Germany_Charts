@@ -234,14 +234,6 @@ uk2010_data <- as.data.frame(split(uk2010_hits, 1:3)) %>%
          artist = X2,
          title = X3)
 
-# This throws an error
-# test_tracks <- map(uk_2000_data$artist, get_artist_audio_features)
-
-uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
- # This throws an error 
-my_tracks <- get_playlist_tracks("7uQBCcnNuxOBv0jFbEcYjH")
-testing <- get_track_audio_features(my_tracks$track.id)
-
 # Map function that iterates over every row in track.artists, getting the id and
 # feeding it into the get_artist function
 
