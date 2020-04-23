@@ -1079,6 +1079,23 @@ energy_ger_2010 <- ger2010_features %>%
   ggtitle("Energy Distribution in Germany Charts 2010") +
   theme_ipsum(base_family = "Calibri")
 
+
+# Testing for function
+
+uk2000_genre <- uk2000_tracks 
+  for(n in 1:nrow(uk2000_tracks)){
+    list(uk2000_tracks$track.artist[[n]][[2]])
+  }
+
+
+for(n in 1:nrow(uk2000_tracks)){
+  SongID <- uk2000_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+}
+
+uk2000_tracks %<>%
+  mutate(genre = NA)
+
 # Sample plot graph for genres
 
 ggplot(same_tracks_2020, aes(year)) +
