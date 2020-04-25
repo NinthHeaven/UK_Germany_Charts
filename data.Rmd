@@ -1081,30 +1081,98 @@ energy_ger_2010 <- ger2010_features %>%
 # Testing for function
 
 
-# What function should do: Get the genres from each song. Then, I would use a map function and paste the genres onto a new column in the uk2000_genre df.
-a_function <- function(list) {
-  for(n in 1:length(list)) {
-    paste(list[[n]])
+# What function should do: Get the genres from each song. Then, I would use a
+# map function and paste the genres onto a new column in the uk2000_genre df.
+
+get_genre <- function(df) {
+  for(i in 1:nrow(df)) {
+    SongID <- df$track.artist[[i]][[2]]
+    SongGenre <- get_artist(SongID[1])
+    df$genre[i] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
   }
 }
-
-# Creating dummy df to test it on. 
-uk2000_genre <- uk2000_tracks 
-
-# Alternative plan to the function: Create a dataframe where the list items but put into one column, and then add that column to uk2000_tracks.
-testdf <- map_dfr(test, ~as.data.frame(t(.x)))
 
 # Solution to getting the genres: Just create a list so the items are pasted
 # into it. I think a structure similar to this would be helpful in putting the
 # genres into the dataframe.
 
-test <- list()
 for(n in 1:nrow(uk2000_tracks)){
   SongID <- uk2000_tracks$track.artist[[n]][[2]]
   SongGenre <- get_artist(SongID[1])
-  test[[n]] <- SongGenre[["genres"]]
+  uk2000_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
 }
 
+for(n in 1:nrow(uk2001_tracks)){
+  SongID <- uk2001_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2001_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2002_tracks)){
+  SongID <- uk2002_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2002_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2003_tracks)){
+  SongID <- uk2003_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2003_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2004_tracks)){
+  SongID <- uk2004_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2004_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2005_tracks)){
+  SongID <- uk2005_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2005_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2006_tracks)){
+  SongID <- uk2006_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2006_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2007_tracks)){
+  SongID <- uk2007_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2007_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2008_tracks)){
+  SongID <- uk2008_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2008_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2009_tracks)){
+  SongID <- uk2009_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2009_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
+
+for(n in 1:nrow(uk2010_tracks)){
+  SongID <- uk2010_tracks$track.artist[[n]][[2]]
+  SongGenre <- get_artist(SongID[1])
+  uk2010_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
+                                  sep="", collapse=",")
+}
 # Sample plot graph for genres
 
 ggplot(same_tracks_2020, aes(year)) +
