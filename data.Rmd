@@ -1091,8 +1091,20 @@ get_genre <- function(df) {
     df$genre[i] <- paste(unlist(SongGenre[["genres"]]),
                                   sep="", collapse=",")
   }
+  df
 }
 
+get_track_artist <- function(col) {
+  SongID <- col[[1]][[2]]
+  
+  SongID
+}
+
+get_track_artist(uk2000_tracks$track.artist[1])
+
+uk2000_tracks %<>%
+  unnest(c)
+  mutate(SongID = map_chr(track.artist[1], ~ get_track_artist))
 # Solution to getting the genres: Just create a list so the items are pasted
 # into it. I think a structure similar to this would be helpful in putting the
 # genres into the dataframe.
