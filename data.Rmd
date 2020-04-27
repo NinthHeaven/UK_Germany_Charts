@@ -1068,36 +1068,160 @@ ger2009_tracks %<>%
 ger2010_tracks %<>%
   get_genre()
 
-saveRDS(uk2000_tracks, file = "uk2000_tracks")
-saveRDS(uk2001_tracks, file = "uk2001_tracks")
-saveRDS(uk2002_tracks, file = "uk2002_tracks")
-saveRDS(uk2003_tracks, file = "uk2003_tracks")
-saveRDS(uk2004_tracks, file = "uk2004_tracks")
-saveRDS(uk2005_tracks, file = "uk2005_tracks")
-saveRDS(uk2006_tracks, file = "uk2006_tracks")
-saveRDS(uk2007_tracks, file = "uk2007_tracks")
-saveRDS(uk2008_tracks, file = "uk2008_tracks")
-saveRDS(uk2009_tracks, file = "uk2009_tracks")
-saveRDS(uk2010_tracks, file = "uk2010_tracks")
+# Cleaning up the UK data, creating a year and position variable so I can
+# combine everything into one huge dataset.
 
-saveRDS(ger2000_tracks, file = "ger2000_tracks")
-saveRDS(ger2001_tracks, file = "ger2001_tracks")
-saveRDS(ger2002_tracks, file = "ger2002_tracks")
-saveRDS(ger2003_tracks, file = "ger2003_tracks")
-saveRDS(ger2004_tracks, file = "ger2004_tracks")
-saveRDS(ger2005_tracks, file = "ger2005_tracks")
-saveRDS(ger2006_tracks, file = "ger2006_tracks")
-saveRDS(ger2007_tracks, file = "ger2007_tracks")
-saveRDS(ger2008_tracks, file = "ger2008_tracks")
-saveRDS(ger2009_tracks, file = "ger2009_tracks")
-saveRDS(ger2010_tracks, file = "ger2010_tracks")
+uk2000_tracks %<>%
+  mutate(year = 2000,
+         position = 1:nrow(.))
+uk2001_tracks %<>%
+  mutate(year = 2001,
+         position = 1:nrow(.))
+uk2002_tracks %<>%
+  mutate(year = 2002,
+         position = 1:nrow(.))
+uk2003_tracks %<>%
+  mutate(year = 2003,
+         position = 1:nrow(.))
+uk2004_tracks %<>%
+  mutate(year = 2004,
+         position = 1:nrow(.))
+uk2005_tracks %<>%
+  mutate(year = 2005,
+         position = 1:nrow(.))
+uk2006_tracks %<>%
+  mutate(year = 2006,
+         position = 1:nrow(.))
+uk2007_tracks %<>%
+  mutate(year = 2007,
+         position = 1:nrow(.))
+uk2008_tracks %<>%
+  mutate(year = 2008,
+         position = 1:nrow(.))
+uk2009_tracks %<>%
+  mutate(year = 2009,
+         position = 1:nrow(.))
+uk2010_tracks %<>%
+  mutate(year = 2010,
+         position = 1:nrow(.))
+
+ger2000_tracks %<>%
+  mutate(year = 2000,
+         position = 1:nrow(.))
+ger2001_tracks %<>%
+  mutate(year = 2001,
+         position = 1:nrow(.))
+ger2002_tracks %<>%
+  mutate(year = 2002,
+         position = 1:nrow(.))
+ger2003_tracks %<>%
+  mutate(year = 2003,
+         position = 1:nrow(.))
+ger2004_tracks %<>%
+  mutate(year = 2004,
+         position = 1:nrow(.))
+ger2005_tracks %<>%
+  mutate(year = 2005,
+         position = 1:nrow(.))
+ger2006_tracks %<>%
+  mutate(year = 2006,
+         position = 1:nrow(.))
+ger2007_tracks %<>%
+  mutate(year = 2007,
+         position = 1:nrow(.))
+ger2008_tracks %<>%
+  mutate(year = 2008,
+         position = 1:nrow(.))
+ger2009_tracks %<>%
+  mutate(year = 2009,
+         position = 1:nrow(.))
+ger2010_tracks %<>%
+  mutate(year = 2010,
+         position = 1:nrow(.))
+
+# Here, I create the UK and Germany charts data so I can refer to this in the
+# shiny app. This will allow me to look at the whole dataset and make decade
+# comparisons :)
+
+uk_charts <- rbind(uk2000_tracks,
+                   uk2001_tracks,
+                   uk2002_tracks,
+                   uk2003_tracks,
+                   uk2004_tracks,
+                   uk2005_tracks,
+                   uk2006_tracks,
+                   uk2007_tracks,
+                   uk2008_tracks,
+                   uk2009_tracks,
+                   uk2010_tracks)
+
+ger_charts <- rbind(ger2000_tracks,
+                    ger2001_tracks,
+                    ger2002_tracks,
+                    ger2003_tracks,
+                    ger2004_tracks,
+                    ger2005_tracks,
+                    ger2006_tracks,
+                    ger2007_tracks,
+                    ger2008_tracks,
+                    ger2009_tracks,
+                    ger2010_tracks)
+
+saveRDS(uk_charts, file = "uk_charts")
+saveRDS(ger_charts, file = "ger_charts")
+
+uk_charts_listing <- rbind(uk_2000_data,
+                           uk2001_data,
+                           uk2002_data,
+                           uk2003_data,
+                           uk2004_data,
+                           uk2005_data,
+                           uk2006_data,
+                           uk2007_data,
+                           uk2008_data,
+                           uk2009_data,
+                           uk2010_data)
+
+ger_charts_listing <- rbind(ger2000_data,
+                            ger2001_data,
+                            ger2002_data,
+                            ger2003_data,
+                            ger2004_data,
+                            ger2005_data,
+                            ger2006_data,
+                            ger2007_data,
+                            ger2008_data,
+                            ger2009_data,
+                            ger2010_data)
+
+
+# Testing how to make graphs for data...
+
+uk_charts_listing %<>%
+  mutate(year = rep(2000:2010, each = 100))
+
+ger_charts_listing %<>%
+  mutate(year = rep(2000:2010, each = 100)) %>%
+  rename(artist = X1,
+         title = X2)
+
+write_rds(uk_charts_listing, "raw-data/uk_charts_listing.rds")
+write_rds(ger_charts_listing, "raw-data/ger_charts_listing.rds")
+
+#testing for shit
+
+uk_charts_listing_2 <- uk_charts_listing %>%
+  count(tolower(artist)) %>%
+  arrange(desc(n))
 
 
 
-# Sample plot graph for genres
-
+uk_charts_listing_2 %>%
+  slice(1:10) %>%
+  gt()
 
 ```
+
 
 # Data Gathered Thus Far
 As you can see above, the data I have only consists of the top 100 music hits in the UK from the year 2000. Why has such little data been gathered? I wanted to show what the rest of the code would look like once I gather all the data from 2000-2010 from the UK and Germany. Although it doesn't look like much code, this will probably be over a thousand lines long by the end of the week. 
