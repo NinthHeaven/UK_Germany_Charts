@@ -1208,10 +1208,22 @@ ger_charts_listing %<>%
 write_rds(uk_charts_listing, "raw-data/uk_charts_listing.rds")
 write_rds(ger_charts_listing, "raw-data/ger_charts_listing.rds")
 
+testttt <- read_rds("raw-data/ger_charts_listing.rds")
+
 #testing for shit
 
-uk_charts_listing_2 <- uk_charts_listing %>%
+overall_uk_artists <- uk_charts_listing %>%
   count(tolower(artist)) %>%
+  arrange(desc(n))
+
+yearly_uk_songs <- uk_charts_listing %>%
+  group_by(artist) %>%
+  count(tolower(title)) %>%
+  arrange(desc(n))
+
+yearly_uk_artists <- uk_charts_listing %>%
+  group_by(year) %>%
+  count(tolower(title)) %>%
   arrange(desc(n))
 
 
