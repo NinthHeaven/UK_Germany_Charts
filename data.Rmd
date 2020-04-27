@@ -32,64 +32,7 @@ access_token <- get_spotify_access_token()
 # absurd given the time for this project. My plan is to hopefully get Spotify to
 # give me access to the global market, if not I will narrow my project.
 
-top_200_2020_uk <- read.csv("raw-data/regional-gb-daily-latest.csv", skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2020"))
 
-top_200_2019_uk <- read.csv("raw-data/regional-gb-daily-2019-02-28.csv", skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2019"))
-
-top_200_2018_uk <- read.csv("raw-data/regional-gb-daily-2018-02-28.csv", skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2018"))
-
-top_200_2017_uk <- read.csv("raw-data/regional-gb-daily-2017-02-28.csv", skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2017"))
-
-# Here is the Germany data that I will hopefully end up using for my final
-# project. I do have some other ideas, such as compare the analysis of the EDM
-# audio tracks that do make it to the US top 200 on Spotify and compare it to
-# the analysis of whatever genres dominate the US charts.
-
-top_200_2020_ger <- read.csv("raw-data-ger/regional-de-daily-latest.csv", skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2020"))
-
-top_200_2019_ger <- read.csv("raw-data-ger/regional-de-daily-2019-02-28.csv",
-                             skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2019"))
-
-top_200_2018_ger <- read.csv("raw-data-ger/regional-de-daily-2018-02-28.csv", 
-                             skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2018"))
-
-top_200_2017_ger <- read.csv("raw-data-ger/regional-de-daily-2017-02-28.csv",
-                             skip = 1) %>%
-  clean_names() %>%
-  select(1:3) %>%
-  mutate(year = rep("2017"))
-
-# Alternatively, I can also try to see which songs match, and get the analytics
-# of the tracks that match and what position they rank in in the UK and Ger
-# markets retrospectively. Of course, this can only be possible if the songs are
-# also available in the US market. I can also just do what I originally wanted
-# to with the 2000-2010 data and just focus on the data I've collected just now.
-
-top_uk_total <- rbind(top_200_2020_uk, top_200_2019_uk, 
-                    top_200_2018_uk, top_200_2017_uk)
-total_ger_total <- rbind(top_200_2020_ger, top_200_2019_ger,
-                         top_200_2018_ger, top_200_2017_ger)
 ```
 
 ```{r ukcharts, echo=FALSE}
@@ -443,7 +386,7 @@ ger2010_data <- data.frame(matrix(unlist(ger2010_hits$Names),
 # Here I will get the audio features for every year in both uk and germany.
 
 uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
-uk2000_tracks <- get_playlist_tracks("7uQBCcnNuxOBv0jFbEcYjH")
+uk2000_tracks <- get_playlist_tracks("7uQBCcnNuxOBv0jFbEcYjH") 
 uk2000_features <- get_track_audio_features(uk2000_tracks$track.id)
 
 uk_2001 <- get_playlist("28MXvLEP4jZ6c5kVIP8ke5")
@@ -531,19 +474,6 @@ ger2009_features <- get_track_audio_features(ger2009_tracks$track.id)
 ger2010 <- get_playlist("1RZV5fBYJUEfeYbT9kiDnk")
 ger2010_tracks <- get_playlist_tracks("1RZV5fBYJUEfeYbT9kiDnk")
 ger2010_features <- get_track_audio_features(ger2010_tracks$track.id)
-
-
-same_tracks_2020 <- top_200_2020_uk %>%
-  inner_join(top_200_2020_ger, by = c("track_name", "artist", "year"))
-
-same_tracks_2019 <- top_200_2019_uk %>%
-  inner_join(top_200_2019_ger, by = c("track_name", "artist", "year"))
-
-same_tracks_2018 <- top_200_2018_uk %>%
-  inner_join(top_200_2018_ger, by = c("track_name", "artist", "year"))
-
-same_tracks_2017 <- top_200_2017_uk %>%
-  inner_join(top_200_2017_ger, by = c("track_name", "artist", "year"))
 
 # Here I store all the danceability, valence, and tempo features per year.
 
@@ -1094,109 +1024,79 @@ get_genre <- function(df) {
   df
 }
 
-get_track_artist <- function(col) {
-  SongID <- col[[1]][[2]]
-  
-  SongID
-}
+uk2000_tracks = get_genre(uk2000_tracks)
+uk2001_tracks %<>%
+  get_genre()
+uk2002_tracks %<>%
+  get_genre()
+uk2003_tracks %<>%
+  get_genre()
+uk2004_tracks %<>%
+  get_genre()
+uk2005_tracks %<>%
+  get_genre()
+uk2006_tracks %<>%
+  get_genre()
+uk2007_tracks %<>%
+  get_genre()
+uk2008_tracks %<>%
+  get_genre()
+uk2009_tracks %<>%
+  get_genre()
+uk2010_tracks %<>%
+  get_genre()
+ger2000_tracks %<>%
+  get_genre()
+ger2001_tracks %<>%
+  get_genre()
+ger2002_tracks %<>%
+  get_genre()
+ger2003_tracks %<>%
+  get_genre()
+ger2004_tracks %<>%
+  get_genre()
+ger2005_tracks %<>%
+  get_genre()
+ger2006_tracks %<>%
+  get_genre()
+ger2007_tracks %<>%
+  get_genre()
+ger2008_tracks %<>%
+  get_genre()
+ger2009_tracks %<>%
+  get_genre()
+ger2010_tracks %<>%
+  get_genre()
 
-get_track_artist(uk2000_tracks$track.artist[1])
+saveRDS(uk2000_tracks, file = "uk2000_tracks")
+saveRDS(uk2001_tracks, file = "uk2001_tracks")
+saveRDS(uk2002_tracks, file = "uk2002_tracks")
+saveRDS(uk2003_tracks, file = "uk2003_tracks")
+saveRDS(uk2004_tracks, file = "uk2004_tracks")
+saveRDS(uk2005_tracks, file = "uk2005_tracks")
+saveRDS(uk2006_tracks, file = "uk2006_tracks")
+saveRDS(uk2007_tracks, file = "uk2007_tracks")
+saveRDS(uk2008_tracks, file = "uk2008_tracks")
+saveRDS(uk2009_tracks, file = "uk2009_tracks")
+saveRDS(uk2010_tracks, file = "uk2010_tracks")
 
-uk2000_tracks %<>%
-  unnest(c)
-  mutate(SongID = map_chr(track.artist[1], ~ get_track_artist))
-# Solution to getting the genres: Just create a list so the items are pasted
-# into it. I think a structure similar to this would be helpful in putting the
-# genres into the dataframe.
+saveRDS(ger2000_tracks, file = "ger2000_tracks")
+saveRDS(ger2001_tracks, file = "ger2001_tracks")
+saveRDS(ger2002_tracks, file = "ger2002_tracks")
+saveRDS(ger2003_tracks, file = "ger2003_tracks")
+saveRDS(ger2004_tracks, file = "ger2004_tracks")
+saveRDS(ger2005_tracks, file = "ger2005_tracks")
+saveRDS(ger2006_tracks, file = "ger2006_tracks")
+saveRDS(ger2007_tracks, file = "ger2007_tracks")
+saveRDS(ger2008_tracks, file = "ger2008_tracks")
+saveRDS(ger2009_tracks, file = "ger2009_tracks")
+saveRDS(ger2010_tracks, file = "ger2010_tracks")
 
-for(n in 1:nrow(uk2000_tracks)){
-  SongID <- uk2000_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2000_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
 
-for(n in 1:nrow(uk2001_tracks)){
-  SongID <- uk2001_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2001_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
 
-for(n in 1:nrow(uk2002_tracks)){
-  SongID <- uk2002_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2002_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2003_tracks)){
-  SongID <- uk2003_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2003_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2004_tracks)){
-  SongID <- uk2004_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2004_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2005_tracks)){
-  SongID <- uk2005_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2005_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2006_tracks)){
-  SongID <- uk2006_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2006_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2007_tracks)){
-  SongID <- uk2007_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2007_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2008_tracks)){
-  SongID <- uk2008_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2008_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2009_tracks)){
-  SongID <- uk2009_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2009_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
-
-for(n in 1:nrow(uk2010_tracks)){
-  SongID <- uk2010_tracks$track.artist[[n]][[2]]
-  SongGenre <- get_artist(SongID[1])
-  uk2010_tracks$genre[n] <- paste(unlist(SongGenre[["genres"]]),
-                                  sep="", collapse=",")
-}
 # Sample plot graph for genres
 
-ggplot(same_tracks_2020, aes(year)) +
-  geom_bar() +
-  geom_bar(data = same_tracks_2019) +
-  geom_bar(data = same_tracks_2018) +
-  geom_bar(data = same_tracks_2017) +
-  theme_classic() +
-  labs(title = "Number of Top Songs in Both Germany and UK",
-       subtitle = "By Spotify daily stream",
-       x = "Year",
-       y = "Number of Songs")
+
 ```
 
 # Data Gathered Thus Far
