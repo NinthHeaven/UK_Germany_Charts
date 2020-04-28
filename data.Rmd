@@ -35,6 +35,8 @@ access_token <- get_spotify_access_token()
 
 ```
 
+# DATA TO BE ADDED
+
 ```{r ukcharts, echo=FALSE}
 # I added this because I thought it would fix the problem with spotify returning
 # NULL observations, but it did not :(
@@ -1205,11 +1207,6 @@ ger_charts_listing %<>%
   rename(artist = X1,
          title = X2)
 
-write_rds(uk_charts_listing, "raw-data/uk_charts_listing.rds")
-write_rds(ger_charts_listing, "raw-data/ger_charts_listing.rds")
-
-testttt <- read_rds("raw-data/ger_charts_listing.rds")
-
 
 # This function is directly taken from Stack Overflow. User got documentation
 # from toupper and used that to write out this function (or perhaps it's from
@@ -1238,26 +1235,83 @@ yearly_uk_songs <- uk_charts_listing %>%
   head(10)
 
 yearly_uk_genres <- data.frame(table(unlist(strsplit(tolower(uk_charts$genre), ",")))) %>%
-  arrange(desc(Freq))
+  arrange(desc(Freq)) %>%
+  head(25)
 
-write_rds(yearly_uk_genres, "yearly_uk_genres.rds")
+yearly_ger_artists <- ger_charts_listing %>%
+  mutate(artist = tolower(artist)) %>%
+  count(artist) %>%
+  arrange(desc(n)) %>%
+  mutate(artist = sapply(artist, simpleCap)) %>%
+  head(10)
+  
+yearly_ger_songs <- ger_charts_listing %>%
+  group_by(artist) %>%
+  mutate(title = tolower(title)) %>%
+  count(title) %>%
+  arrange(desc(n)) %>%
+  mutate(title = sapply(title, simpleCap)) %>%
+  head(10)
 
+yearly_ger_genres <- data.frame(table(unlist(strsplit(tolower(ger_charts$genre), ",")))) %>%
+  arrange(desc(Freq)) %>%
+  head(25)
+
+foruk_artists <- yearly_uk_artists %>%
+  gt() %>%
+  tab_header(title = "Artists that have Appeared the Most in UK Charts",
+             subtitle = "Data from 2000 - 2010") %>%
+  cols_label(artist = "Artist",
+             n = "Count")
+
+foruk_songs <- yearly_uk_songs %>%
+  ungroup(artist) %>%
+  gt() %>%
+  tab_header(title = "Songs that have Appeared the Most in UK Charts",
+             subtitle = "Data from 2000 - 2010") %>%
+  cols_label(artist = "Artist",
+             title = "Song Title",
+             n = "Count")
+
+foruk_genres <- yearly_uk_genres %>%
+  gt() %>%
+  tab_header(title = "Most Popular Genres in UK Charts",
+             subtitle = "Data from 2000 - 2010") %>%
+  cols_label(Var1 = "Genre",
+             Freq = "Count") %>%
+  tab_footnote("Most songs fall under multiple genres.",
+               locations = cells_title(groups = "subtitle"))
+
+forger_artists <- yearly_ger_artists %>%
+  gt() %>%
+  tab_header(title = "Artists that have Appeared the Most in German Charts",
+             subtitle = "Data from 2000 - 2010") %>%
+  cols_label(artist = "Artist",
+             n = "Count")
+
+forger_songs <- yearly_ger_songs %>%
+  ungroup(artist) %>%
+  gt() %>%
+  tab_header(title = "Songs that have Appeared the Most in German Charts",
+             subtitle = "Data from 2000 - 2010") %>%
+  cols_label(artist = "Artist",
+             title = "Song Title",
+             n = "Count")
+
+forger_genres <- yearly_ger_genres %>%
+  gt() %>%
+  tab_header(title = "Most Popular Genres in German Charts",
+             subtitle = "Data from 2000 - 2010") %>%
+  cols_label(Var1 = "Genre",
+             Freq = "Count") %>%
+  tab_footnote("Most songs fall under multiple genres.",
+               locations = cells_title(groups = "subtitle"))
+
+write_rds(foruk_artists, "yearly_uk_artists.rds")
+write_rds(foruk_songs, "yearly_uk_songs.rds")
+write_rds(foruk_genres, "yearly_uk_genres.rds")
+write_rds(forger_artists, "yearly_ger_artists.rds")
+write_rds(forger_songs, "yearly_ger_songs.rds")
+write_rds(forger_genres, "yearly_ger_genres.rds")
 
 ```
-
-
-# Data Gathered Thus Far
-As you can see above, the data I have only consists of the top 100 music hits in the UK from the year 2000. Why has such little data been gathered? I wanted to show what the rest of the code would look like once I gather all the data from 2000-2010 from the UK and Germany. Although it doesn't look like much code, this will probably be over a thousand lines long by the end of the week. 
-
-# How did you get this fine piece of data?
-Thank you for asking stranger. I got this data by scraping the list from this website: http://www.uk-charts.top-source.info/index.shtml. I will continue to get data from this website from 2000-2010 for the UK, then I will use https://www.offiziellecharts.de to get the data for Germany. 
-
-# Why did you stop after 1 year?
-This was mostly me just testing the waters of what I can do with the data I gathered. Obviously this isn't the final project, it's not even %5 of the final project. I still have to scrape 1,900 more songs, and probably bind all of the data into two big chunks of 10 years of observations for Germany and UK. However, I will have to figure out how to get Spotify to analyze the data in the "titles" section of the UK data (it currently returns a lot of NULL observations, so I will have to read more of the sportifyr documentation). I should have all the data I want by tomorrow, and I will have to figure out how to get spotify to read that data over the weekend so I can start making some nice looking graphs. Overall, I think I am pretty happy where I am with this project.
-
-# Are you going to keep updating this repo?
-
-Of course! Everything pushed after today is just me gathering data from the UK and Germany charts. Hopefully by Sunday I will have created two massive chunks of data, but that is if I can get the spotify function to work. It is crucial for me to do this because most of the spotify commands involving track analysis can only take 100 observations at once.
-
-Here is the repo for your convenience:
-https://github.com/NinthHeaven/milestone4
