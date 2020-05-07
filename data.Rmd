@@ -18,6 +18,9 @@ library(infer)
 library(magrittr)
 library(hrbrthemes)
 library(extrafont)
+library(gganimate)
+library(transformr)
+library(gt)
 Sys.setenv(SPOTIFY_CLIENT_ID = '1ebacb60ef2044ccadab18602f7c0b8f')
 Sys.setenv(SPOTIFY_CLIENT_SECRET = '6fb54464f8dc45c88387a4fadde775db')
 
@@ -1169,6 +1172,36 @@ ger_charts <- rbind(ger2000_tracks,
                     ger2009_tracks,
                     ger2010_tracks)
 
+uk_features <- rbind(uk2000_features,
+                     uk2001_features,
+                     uk2002_features,
+                     uk2003_features,
+                     uk2004_features,
+                     uk2005_features,
+                     uk2006_features,
+                     uk2007_features,
+                     uk2008_features,
+                     uk2009_features,
+                     uk2010_features)
+
+uk_charts <- cbind(uk_charts,
+                   uk_features)
+
+ger_features <- rbind(ger2000_features,
+                      ger2001_features,
+                      ger2002_features,
+                      ger2003_features,
+                      ger2004_features,
+                      ger2005_features,
+                      ger2006_features,
+                      ger2007_features,
+                      ger2008_features,
+                      ger2009_features,
+                      ger2010_features)
+
+ger_charts <- cbind(ger_charts,
+                    ger_features)
+
 saveRDS(uk_charts, file = "uk_charts")
 saveRDS(ger_charts, file = "ger_charts")
 
@@ -1307,11 +1340,27 @@ forger_genres <- yearly_ger_genres %>%
   tab_footnote("Most songs fall under multiple genres.",
                locations = cells_title(groups = "subtitle"))
 
-write_rds(foruk_artists, "yearly_uk_artists.rds")
-write_rds(foruk_songs, "yearly_uk_songs.rds")
-write_rds(foruk_genres, "yearly_uk_genres.rds")
-write_rds(forger_artists, "yearly_ger_artists.rds")
-write_rds(forger_songs, "yearly_ger_songs.rds")
-write_rds(forger_genres, "yearly_ger_genres.rds")
+
+
+
+testancebility <- ger_charts %>%
+  ggplot(aes(tempo)) +
+  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+  transition_time(year) +
+  labs(title = "Tempo Distribution in Germany Charts {closest_state}") +
+  theme_ipsum(base_family = "Calibri") +
+  transition_states(year)
+
+testancebility
 
 ```
+
+```{r set_wd, echo=FALSE}
+
+setwd("C:/Users/Saul/Documents/milestone4/UK_GER_Charts/")
+
+
+saveRDS(uk_charts, file = "uk_charts.rds")
+saveRDS(ger_charts, file = "ger_charts.rds")
+```
+
