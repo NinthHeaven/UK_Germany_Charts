@@ -39,6 +39,11 @@ yearly_ger_genres <- read_rds("yearly_ger_genres.rds")
 uk_charts <- readRDS("uk_charts.rds")
 ger_charts <- readRDS("ger_charts.rds")
 
+# Below I read the data that I will use for the wordcloud
+
+ukcloud <- readRDS("ukcloud.rds")
+gercloud <- readRDS("gercloud.rds")
+
 # Define UI for application that draws a histogram
 ui <- navbarPage(theme = shinytheme("simplex"),
     # Application title
@@ -127,6 +132,20 @@ ui <- navbarPage(theme = shinytheme("simplex"),
         )
     ),
     tabPanel(
+        "UK-GER Genre Comparison",
+        p("Here you can look at the most popular genres in the UK and Germany in the 2000s. Do you notice any major changes in which genres dominated the charts in the 2000s?"),
+        br(),
+        sidebarPanel(
+            selectInput("uk_ger_comp", "Choose the country you would like to view:",
+                        c("United Kingdom", "Germany")),
+            sliderInput("year_input", "Select a year by using the slider below:",
+                        min = 2000, max = 2010, value = 2000)
+        ),
+        mainPanel(
+            plotOutput("wordcloud")
+        )
+    ),
+    tabPanel(
         "About",
         h3("Interlude"),
         p("It is no doubt that hip hop and pop dominates the US charts, most likely due to the culture that emerged in the late 90s and took off in the 2000s. Each country has a genre or genres that dominate their charts and are representative of its culture to some degree. For example, Germany was tied to mostly EDM until fairly recently. Although some aspect of EDM culture is still present when observing the top tracks, according to Statistica, Pop and Rock are the most popular genre. The UK also had a similar story, being tied to the emergence of Eurodance in the 90s which sparked an era of EDM music that continued to evolve; from UK Garage to Dubstep for example. However, unlike Germany, most of these popular genres were 'underground', being played at now-closed nightclubs that many ravers enjoyed attending. Similar to the US, pop and hip hop were the most popular genres in the UK starting in the late 90s."),
@@ -208,6 +227,21 @@ server <- function(input, output) {
         }
         else if(input$yearly_ger == "Genres"){
             yearly_ger_genres
+        }
+    })
+    
+    output$wordcloud <- renderPlot({
+        if(input$uk_ger_comp == "United Kingdom"){
+           uk_wordcloud <- ukcloud %>%
+               filter(year == input$year_input)
+           
+           wordcloud(words = uk_wordcloud$genre, freq = uk_wordcloud$Count, min.freq = 1, max.words=80, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"), scale = c(3.5, 0.25))
+        }
+        else if(input$uk_ger_comp == "Germany"){
+            ger_wordcloud <- gercloud %>%
+                filter(year == input$year_input)
+            
+            wordcloud(words = ger_wordcloud$genre, freq = ger_wordcloud$Count, min.freq = 1, max.words=80, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"), scale = c(3.5, 0.25))
         }
     })
 }

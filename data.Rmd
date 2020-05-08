@@ -21,6 +21,10 @@ library(extrafont)
 library(gganimate)
 library(transformr)
 library(gt)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+library(tm)
 Sys.setenv(SPOTIFY_CLIENT_ID = '1ebacb60ef2044ccadab18602f7c0b8f')
 Sys.setenv(SPOTIFY_CLIENT_SECRET = '6fb54464f8dc45c88387a4fadde775db')
 
@@ -1403,9 +1407,35 @@ ger_energy <- ger_charts %>%
 
 ```
 
+```{r word_cloud_maker, echo=FALSE}
+
+ukcloud <- uk_charts %>%
+  separate_rows(genre, sep = ',') %>%
+  group_by(genre = tolower(genre), year) %>%
+  filter(!genre == "") %>%
+  summarise(Count = n()) %>%
+  ungroup(genre) %>%
+  arrange(year)
+
+gercloud <- ger_charts %>%
+  separate_rows(genre, sep = ',') %>%
+  group_by(genre = tolower(genre), year) %>%
+  filter(!genre == "") %>%
+  summarise(Count = n()) %>%
+  ungroup(genre) %>%
+  arrange(year)
+
+
+
+```
+
+
 ```{r set_wd, echo=FALSE}
 
 setwd("C:/Users/Saul/Documents/milestone4/UK_GER_Charts/")
+
+saveRDS(ukcloud, "ukcloud.rds")
+saveRDS(gercloud, "gercloud.rds")
 
 anim_save("uk_danceability.gif", animate(uk_danceability))
 anim_save("uk_valence.gif", animate(uk_valence))
@@ -1420,4 +1450,6 @@ anim_save("ger_energy.gif", animate(ger_energy))
 saveRDS(uk_charts, file = "uk_charts.rds")
 saveRDS(ger_charts, file = "ger_charts.rds")
 ```
+
+
 
