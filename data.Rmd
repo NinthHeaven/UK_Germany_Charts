@@ -1407,7 +1407,7 @@ ger_energy <- ger_charts %>%
 
 setwd("C:/Users/Saul/Documents/milestone4/UK_GER_Charts/")
 
-anim_save("ukdanceability.gif", animate(uk_danceability))
+anim_save("uk_danceability.gif", animate(uk_danceability))
 anim_save("uk_valence.gif", animate(uk_valence))
 anim_save("uk_tempo.gif", animate(uk_tempo))
 anim_save("uk_energy.gif", animate(uk_energy))

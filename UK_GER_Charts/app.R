@@ -149,7 +149,7 @@ server <- function(input, output) {
         # this solution on StackOverflow.
         
         if(input$feature == "Danceability"){
-            list(src = "ukdanceability.gif",
+            list(src = "uk_danceability.gif",
                  contentType = 'image/gif')
         }
         else if(input$feature == "Valence"){
@@ -164,7 +164,7 @@ server <- function(input, output) {
             list(src = "uk_energy.gif",
                  contentType = 'image/gif')
         }
-    })
+    }, deleteFile = FALSE)
     
     output$GERCharts <- renderImage({
         
@@ -185,7 +185,7 @@ server <- function(input, output) {
             list(src = "ger_energy.gif",
                  contentType = 'image/gif')
         }
-    })
+    }, deleteFile = FALSE)
     
     output$UKAnalysis <- render_gt({
         if(input$yearly_uk == "Artists"){
