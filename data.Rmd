@@ -1343,21 +1343,78 @@ forger_genres <- yearly_ger_genres %>%
 
 
 
-testancebility <- ger_charts %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  transition_time(year) +
-  labs(title = "Tempo Distribution in Germany Charts {closest_state}") +
-  theme_ipsum(base_family = "Calibri") +
-  transition_states(year)
+uk_danceability <- uk_charts %>%
+                ggplot(aes(danceability)) +
+                geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+                ggtitle("Danceability Distribution in UK Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
 
-testancebility
+uk_valence <- uk_charts %>%
+                ggplot(aes(valence)) +
+                geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+                ggtitle("Valence Distribution in UK Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
+
+uk_tempo <- uk_charts %>%
+                ggplot(aes(tempo)) +
+                geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+                transition_time(year) +
+                labs(title = "Tempo Distribution in UK Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
+
+uk_energy <- uk_charts %>%
+                ggplot(aes(energy)) +
+                geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
+                ggtitle("Energy Distribution in UK Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
+
+ger_danceability <- ger_charts %>%
+                ggplot(aes(danceability)) +
+                geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+                ggtitle("Danceability Distribution in Germany Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
+
+ger_valence <- ger_charts %>%
+                ggplot(aes(valence)) +
+                geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+                ggtitle("Valence Distribution in Germany Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
+
+ger_tempo <- ger_charts %>%
+                ggplot(aes(tempo)) +
+                geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+                transition_time(year) +
+                labs(title = "Tempo Distribution in Germany Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
+
+ger_energy <- ger_charts %>%
+                ggplot(aes(energy)) +
+                geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
+                ggtitle("Energy Distribution in Germany Charts {closest_state}") +
+                theme_ipsum(base_family = "Calibri") +
+                transition_states(year)
 
 ```
 
 ```{r set_wd, echo=FALSE}
 
 setwd("C:/Users/Saul/Documents/milestone4/UK_GER_Charts/")
+
+anim_save("ukdanceability.gif", animate(uk_danceability))
+anim_save("uk_valence.gif", animate(uk_valence))
+anim_save("uk_tempo.gif", animate(uk_tempo))
+anim_save("uk_energy.gif", animate(uk_energy))
+anim_save("ger_danceability.gif", animate(ger_danceability))
+anim_save("ger_valence.gif", animate(ger_valence))
+anim_save("ger_tempo.gif", animate(ger_tempo))
+anim_save("ger_energy.gif", animate(ger_energy))
 
 
 saveRDS(uk_charts, file = "uk_charts.rds")
