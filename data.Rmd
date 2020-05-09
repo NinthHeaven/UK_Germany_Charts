@@ -42,9 +42,9 @@ access_token <- get_spotify_access_token()
 
 ```
 
-# DATA TO BE ADDED
 
-```{r ukcharts, echo=FALSE}
+
+```{r charts_data, echo=FALSE}
 # I added this because I thought it would fix the problem with spotify returning
 # NULL observations, but it did not :(
 
@@ -68,13 +68,9 @@ uk_2000_data <- as.data.frame(split(uk_2000_data, 1:3)) %>%
          artist = X2,
          title = X3)
 
-## Test out if Spotify will give me the genres of titles. This does not work at
-## the moment, but I believe that once I figure this aspect out, it shall be
-## easy to move onwards with the data-gathering.
-
-# get_track_audio_features(uk_2000_data$title)
-
-## Get tracks from 2001-2010 in UK
+# Here I read in UK charts data from the website, convert it into html_text
+# dataframe, then clean up the data so it lists the position, artist, and title
+# of the song.
 
 uk2001_hits <- "http://www.uk-charts.top-source.info/top-100-2001.shtml" %>%
   read_html()
@@ -186,11 +182,18 @@ uk2010_data <- as.data.frame(split(uk2010_hits, 1:3)) %>%
          artist = X2,
          title = X3)
 
-# Map function that iterates over every row in track.artists, getting the id and
-# feeding it into the get_artist function
+# I do the same for the Germany data below. Note, I had to do a little extra
+# more steps because the Offizielle Deutsche Charts website displayed their data
+# in a rather peculiar way, creating a VERY ugly looking dataset when I read it
+# in as html.
 
 ger2000_hits <- "https://www.offiziellecharts.de/charts/single-jahr/for-date-2000" %>%
   read_html()
+
+# For example, here (thanks to Mitchell!) I converted the data to html text
+# format, then I had to get rid of the extra spaces that occurred after
+# converting to text. I then created a tibble for the almost cleaned up germany
+# charts data.
 
 ger2000_hits <- html_nodes(ger2000_hits, ".year-mode") %>%
   html_text() %>%
@@ -198,10 +201,20 @@ ger2000_hits <- html_nodes(ger2000_hits, ".year-mode") %>%
   trimws()%>%
   tibble()
 
+# Here, I renamed the column that had both the artists and the song and then
+# split the artist and song title into separate columns. Note: there were 36
+# spaces in between the artist name and the song title which is why I had to use
+# string split again.
+
 colnames(ger2000_hits)<-c("Column")
 
 ger2000_hits<- ger2000_hits %>% 
   mutate(Names=str_split(Column,"\\s{36}"))
+
+# Finally, I organize the german data once more and have artist and song title
+# in separate columns. Unfortunately, the germany dataset did not come with a
+# position column, however I did not add it because I can just look at what row
+# number the song falls under to know it's position in the charts.
 
 ger2000_data <- data.frame(matrix(unlist(ger2000_hits$Names),
                                   nrow=100, byrow=T),stringsAsFactors=FALSE)
@@ -383,16 +396,14 @@ ger2010_data <- data.frame(matrix(unlist(ger2010_hits$Names),
                                   nrow=100,
                                   byrow = T), stringsAsFactors = FALSE)
 
-# This will be something I would like to do with the 2000-2010 data. Here is a
-# demo with the Spotify Top 200 playlist that I would want to replicate with my
-# own data. The problem with my data currently is that the function that should
-# be working isn't, and every spotify tutorial uses the same method as mine.
-# Also, I do not have access to the Spotify UK/GER markets, so there are songs
-# that I am missing from my top playlists. Most of the data I gathered will be
-# in the playlists themselves, and I am still trying to figure out how to clean
-# up the GER data so I can easily display it somewhere on the website.
+# Here I will get the audio features for every year in both UK and Germany.
 
-# Here I will get the audio features for every year in both uk and germany.
+# This is how I gathered the audio features data. First, I created 22 playlists,
+# each dedicated to a year in the charts for the UK and Germany. I have one
+# playlist for the UK 2000 Charts and so on. Then, I read in the playlist
+# information into a variable. Afterwards, I get the track information from the
+# playlists, and use that to get the audio analysis features (danceability,
+# energy, tempo, etc.) needed for my shiny app.
 
 uk_2000 <- get_playlist("7uQBCcnNuxOBv0jFbEcYjH")
 uk2000_tracks <- get_playlist_tracks("7uQBCcnNuxOBv0jFbEcYjH") 
@@ -409,8 +420,6 @@ uk2002_features <- get_track_audio_features(uk2002_tracks$track.id)
 uk2003 <- get_playlist("7ajCdWcuELFirRcGl9LKsv")
 uk2003_tracks <- get_playlist_tracks("7ajCdWcuELFirRcGl9LKsv")
 uk2003_features <- get_track_audio_features(uk2003_tracks$track.id)
-
-# Start here
 
 uk2004 <- get_playlist("4d9CrfTDJ7WgDXL7xy4gnu")
 uk2004_tracks <- get_playlist_tracks("4d9CrfTDJ7WgDXL7xy4gnu")
@@ -483,545 +492,16 @@ ger2009_features <- get_track_audio_features(ger2009_tracks$track.id)
 ger2010 <- get_playlist("1RZV5fBYJUEfeYbT9kiDnk")
 ger2010_tracks <- get_playlist_tracks("1RZV5fBYJUEfeYbT9kiDnk")
 ger2010_features <- get_track_audio_features(ger2010_tracks$track.id)
+```
 
-# Here I store all the danceability, valence, and tempo features per year.
 
-danceability_uk_2000 <- uk2000_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2000 <- uk2000_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2000") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2000 <- uk2000_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2000 <- uk2000_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2001 <- uk2001_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2001") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2001 <- uk2001_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2001") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2001 <- uk2001_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2001") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2001 <- uk2001_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2001") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2002 <- uk2002_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2002") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2002 <- uk2002_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2002") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2002 <- uk2002_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2002") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2002 <- uk2002_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2002") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2003 <- uk2003_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2003") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2003 <- uk2003_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2003") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2003 <- uk2003_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2003") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2003 <- uk2003_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2003") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2004 <- uk2004_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2004") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2004 <- uk2004_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2004") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2004 <- uk2004_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2004") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2004 <- uk2004_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2004") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2005 <- uk2005_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2005") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2005 <- uk2005_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2005") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2005 <- uk2005_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2005") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2005 <- uk2005_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2005") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2006 <- uk2006_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2006") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2006 <- uk2006_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2006") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2006 <- uk2006_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2006") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2006 <- uk2006_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2006") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2007 <- uk2007_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2007") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2007 <- uk2007_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2007") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2007 <- uk2007_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2007") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2007 <- uk2007_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2007") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2008 <- uk2008_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2008") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2008 <- uk2008_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2008") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2008 <- uk2008_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2008") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2008 <- uk2008_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2008") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2009 <- uk2009_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2009") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2009 <- uk2009_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2009") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2009 <- uk2009_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2009") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2009 <- uk2009_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2009") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_uk_2010 <- uk2010_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in UK Charts 2010") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_uk_2010 <- uk2010_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in UK Charts 2010") +
-  theme_ipsum(base_family = "Calibri") 
-
-tempo_uk_2010 <- uk2010_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in UK Charts 2010") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_uk_2010 <- uk2010_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in UK Charts 2010") +
-  theme_ipsum(base_family = "Calibri")
-
-# Here are the germany datas
-
-danceability_ger_2000 <- ger2000_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2000 <- ger2000_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2000 <- ger2000_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2000 <- ger2000_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2000") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2001 <- ger2001_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2001") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2001 <- ger2001_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2001") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2001 <- ger2001_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2001") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2001 <- ger2001_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2001") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2002 <- ger2002_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2002") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2002 <- ger2002_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2002") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2002 <- ger2002_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2002") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2002 <- ger2002_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2002") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2003 <- ger2003_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2003") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2003 <- ger2003_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2003") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2003 <- ger2003_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2003") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2003 <- ger2003_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2003") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2004 <- ger2004_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2004") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2004 <- ger2004_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2004") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2004 <- ger2004_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2004") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2004 <- ger2004_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2004") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2005 <- ger2005_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2005") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2005 <- ger2005_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2005") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2005 <- ger2005_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2005") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2005 <- ger2005_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2005") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2006 <- ger2006_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2006") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2006 <- ger2006_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2006") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2006 <- ger2006_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2006") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2006 <- ger2006_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2006") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2007 <- ger2007_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2007") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2007 <- ger2007_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2007") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2007 <- ger2007_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2007") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2007 <- ger2007_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2007") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2008 <- ger2008_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2008") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2008 <- ger2008_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2008") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2008 <- ger2008_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2008") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2008 <- ger2008_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2008") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2009 <- ger2009_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2009") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2009 <- ger2009_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2009") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2009 <- ger2009_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2009") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2009 <- ger2009_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2009") +
-  theme_ipsum(base_family = "Calibri")
-
-danceability_ger_2010 <- ger2010_features %>%
-  ggplot(aes(danceability)) +
-  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
-  ggtitle("Danceability Distribution in Germany Charts 2010") +
-  theme_ipsum(base_family = "Calibri")
-
-valence_ger_2010 <- ger2010_features %>%
-  ggplot(aes(valence)) +
-  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
-  ggtitle("Valence Distribution in Germany Charts 2010") +
-  theme_ipsum(base_family = "Calibri")
-
-tempo_ger_2010 <- ger2010_features %>%
-  ggplot(aes(tempo)) +
-  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
-  ggtitle("Tempo Distribution in Germany Charts 2010") +
-  theme_ipsum(base_family = "Calibri")
-
-energy_ger_2010 <- ger2010_features %>%
-  ggplot(aes(energy)) +
-  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
-  ggtitle("Energy Distribution in Germany Charts 2010") +
-  theme_ipsum(base_family = "Calibri")
-
-
-# Testing for function
-
-
+```{r get_genre_data, echo=FALSE}
 # What function should do: Get the genres from each song. Then, I would use a
 # map function and paste the genres onto a new column in the uk2000_genre df.
+
+# What this function does, stores the song ID into a variable, then gets the
+# artist info and the genre info for that song, creating a new column in the
+# original dataset. The function then returns the modified dataframe back.
 
 get_genre <- function(df) {
   for(i in 1:nrow(df)) {
@@ -1033,7 +513,12 @@ get_genre <- function(df) {
   df
 }
 
-uk2000_tracks = get_genre(uk2000_tracks)
+# Here I use the get_genre function to add a genre column to every UK and
+# Germany Charts data. This process takes a very long time, so I created a new r
+# chunk with cache turned on.
+
+uk2000_tracks %<>%
+  get_genre()
 uk2001_tracks %<>%
   get_genre()
 uk2002_tracks %<>%
@@ -1076,7 +561,10 @@ ger2009_tracks %<>%
   get_genre()
 ger2010_tracks %<>%
   get_genre()
+```
 
+
+```{r chart_analysis, echo=FALSE}
 # Cleaning up the UK data, creating a year and position variable so I can
 # combine everything into one huge dataset.
 
@@ -1176,6 +664,12 @@ ger_charts <- rbind(ger2000_tracks,
                     ger2009_tracks,
                     ger2010_tracks)
 
+# I create a massive dataframe for the UK/GER features so I can combine them and
+# look at not only the track information from the playlists, but also the audio
+# features analysis. It was not a problem combining these two datasets because
+# they get their info from the same place (the Spotify playlists I created) and
+# thus have the same amount of observations.
+
 uk_features <- rbind(uk2000_features,
                      uk2001_features,
                      uk2002_features,
@@ -1206,8 +700,19 @@ ger_features <- rbind(ger2000_features,
 ger_charts <- cbind(ger_charts,
                     ger_features)
 
-saveRDS(uk_charts, file = "uk_charts")
-saveRDS(ger_charts, file = "ger_charts")
+# I saved the data here so I would later use it for the ShinyApp, but I changed
+# my code so the following chunk below is NULL. Something I did learn about
+# saving RDS files and reading them on shiny is that I have to make sure I save
+# them in the folder where the shiny app is or else it won't be able to find the
+# data.
+
+# saveRDS(uk_charts, file = "uk_charts")
+# saveRDS(ger_charts, file = "ger_charts")
+
+# Below I create a new dataset for the songs that appeared in the UK and Germany
+# Charts in the 2000s. I created a massive dataset for UK and Germany so I could
+# see which songs, artists, and genres were most popular in the charts during
+# this decade.
 
 uk_charts_listing <- rbind(uk_2000_data,
                            uk2001_data,
@@ -1234,7 +739,8 @@ ger_charts_listing <- rbind(ger2000_data,
                             ger2010_data)
 
 
-# Testing how to make graphs for data...
+# I added a year column to the charts listing dataframes so I could do yearly
+# analysis if need be.
 
 uk_charts_listing %<>%
   mutate(year = rep(2000:2010, each = 100))
@@ -1256,6 +762,13 @@ simpleCap <- function(x) {
       sep="", collapse=" ")
 }
 
+# Here I count the number of times an artist, song, or genre has appeared in the
+# UK/GER Charts and then get the top 10 or 20 for the decade. I had to count by
+# lower-casing the target column (due to inconsistencies in capitilization), and
+# then renaming the column and fixing the capitilization at the end. As
+# mentioned above, the mutate and count lines were inspired by the StackOverflow
+# post above.
+
 yearly_uk_artists <- uk_charts_listing %>%
   count(tolower(artist)) %>%
   arrange(desc(n)) %>%
@@ -1270,6 +783,11 @@ yearly_uk_songs <- uk_charts_listing %>%
   rename(title = `tolower(title)`) %>%
   mutate(title = sapply(title, simpleCap)) %>%
   head(10)
+
+# For genres, it was a little bit different since the genre column was a list of
+# characters. In order to analyze the genre data for the UK and Germany, I had
+# to create an entirely new dataframe from the now-unlisted genre column and
+# count the number of times a genre appeared in the charts.
 
 yearly_uk_genres <- data.frame(table(unlist(strsplit(tolower(uk_charts$genre), ",")))) %>%
   arrange(desc(Freq)) %>%
@@ -1293,6 +811,12 @@ yearly_ger_songs <- ger_charts_listing %>%
 yearly_ger_genres <- data.frame(table(unlist(strsplit(tolower(ger_charts$genre), ",")))) %>%
   arrange(desc(Freq)) %>%
   head(25)
+
+# Below are the top artists, genres, and songs gt tables for the UK and Germany.
+# I created the gt table here mostly so I can practice on how the code would
+# look like when I move it to the shinyapp. I did not end up putting this code
+# in the shinyapp and have it be interactive with the user's input because I
+# found it easier to just load the gt table and avoid any lag that might occur.
 
 foruk_artists <- yearly_uk_artists %>%
   gt() %>%
@@ -1345,7 +869,19 @@ forger_genres <- yearly_ger_genres %>%
                locations = cells_title(groups = "subtitle"))
 
 
+# Here I make the danceability, valence, energy, and tempo animated distribution
+# plots for Germany and the UK over time. I instead have the gganimated plot
+# here instead of on the shinyapp as I did originally because Mitchell suggested
+# that I save the plots as gifs and just load it in the shiny app. This turned
+# out to be a great idea because the shinyapp was able to load the animated
+# plots quickly without any problem. If I had the following code on shiny and
+# ran the app, the website would lag and would not load anything until the
+# graphs were loaded (even the gt tables which were normally quick to load). If
+# you to the very last chunk below, you can see the original ggplot unanimated
+# plot and see that the code has not changed as much.
 
+# PS: transition_states uses {closest_state} in order to display the year. I ran
+# into a problem with this initially because I kept using {frame_time}.
 
 uk_danceability <- uk_charts %>%
                 ggplot(aes(danceability)) +
@@ -1409,6 +945,12 @@ ger_energy <- ger_charts %>%
 
 ```{r word_cloud_maker, echo=FALSE}
 
+# The UK and Germany cloud dataframes are created below. The dataframes list the
+# number of times a genre appeared on the charts per year. I had to delete some
+# of the data because Spotify was unable to find the genres for a few songs. I
+# made sure to include the year variable in order to create a wordcloud for each
+# year on shiny so users can see the most popular genres in the charts per year.
+
 ukcloud <- uk_charts %>%
   separate_rows(genre, sep = ',') %>%
   group_by(genre = tolower(genre), year) %>%
@@ -1424,15 +966,15 @@ gercloud <- ger_charts %>%
   summarise(Count = n()) %>%
   ungroup(genre) %>%
   arrange(year)
-
-
-
 ```
 
 
 ```{r set_wd, echo=FALSE}
 
-setwd("C:/Users/Saul/Documents/milestone4/UK_GER_Charts/")
+# I save the wordcloud dataframes, the audio features animated plots as gifs,
+# and the uk and german charts data in the shiny apps directory so I can load it
+# in shiny. There was a line of code that set the working directory to the app
+# (using setwd), but I removed it since it was using a hard coded pathfile.
 
 saveRDS(ukcloud, "ukcloud.rds")
 saveRDS(gercloud, "gercloud.rds")
@@ -1451,5 +993,58 @@ saveRDS(uk_charts, file = "uk_charts.rds")
 saveRDS(ger_charts, file = "ger_charts.rds")
 ```
 
+```{r unused_data, echo=FALSE}
 
+# Here I store all the danceability, valence, and tempo features per year.
+# Although this is no longer going to be used in the actual project, I am saving
+# this code below because I feel like it would be nice to see what I did for
+# this project whenever I look back on it. Yes, originally I did create 88
+# different plots by hand to analyze the features of the songs in the German/UK
+# charts per year. However, I later switched to an animated format, which still
+# used the components of these ggplots but with transition states.
+
+#danceability_uk_2000 <- uk2000_features %>%
+#  ggplot(aes(danceability)) +
+#  geom_density(fill = "#faac0f", colour = "#fcab08", alpha = 0.7) +
+#  ggtitle("Danceability Distribution in UK Charts 2000") +
+#  theme_ipsum(base_family = "Calibri")
+
+#valence_uk_2000 <- uk2000_features %>%
+#  ggplot(aes(valence)) +
+#  geom_density(fill = "#69b3a2", colour = "#e9ecef", alpha = 0.7) +
+#  ggtitle("Valence Distribution in UK Charts 2000") +
+#  theme_ipsum(base_family = "Calibri") 
+
+#tempo_uk_2000 <- uk2000_features %>%
+#  ggplot(aes(tempo)) +
+#  geom_density(fill = "#4287f5", colour = "#316fd4", alpha = 0.7) +
+#  ggtitle("Tempo Distribution in UK Charts 2000") +
+#  theme_ipsum(base_family = "Calibri")
+
+#energy_uk_2000 <- uk2000_features %>%
+#  ggplot(aes(energy)) +
+#  geom_density(fill = "#f2493d", colour = "#f090e9", alpha = 0.7) +
+#  ggtitle("Energy Distribution in UK Charts 2000") +
+#  theme_ipsum(base_family = "Calibri")
+
+```
+
+# Data Gathered Thus Far
+All data has been gathered and publshed on shiny!
+
+# How did you get this fine piece of data?
+Thank you for asking stranger. I got this data by scraping the list from this website: http://www.uk-charts.top-source.info/index.shtml. I will continue to get data from this website from 2000-2010 for the UK, then I will use https://www.offiziellecharts.de to get the data for Germany. 
+
+# Why did you stop after 1 year?
+This was mostly me just testing the waters of what I can do with the data I gathered. Obviously this isn't the final project, it's not even %5 of the final project. I still have to scrape 1,900 more songs, and probably bind all of the data into two big chunks of 10 years of observations for Germany and UK. However, I will have to figure out how to get Spotify to analyze the data in the "titles" section of the UK data (it currently returns a lot of NULL observations, so I will have to read more of the sportifyr documentation). I should have all the data I want by tomorrow, and I will have to figure out how to get spotify to read that data over the weekend so I can start making some nice looking graphs. Overall, I think I am pretty happy where I am with this project.
+
+# Are you going to keep updating this repo?
+Of course! Everything pushed after today is just me gathering data from the UK and Germany charts. Hopefully by Sunday I will have created two massive chunks of data, but that is if I can get the spotify function to work. It is crucial for me to do this because most of the spotify commands involving track analysis can only take 100 observations at once.
+
+Here is the repo for your convenience:
+https://github.com/NinthHeaven/milestone4
+
+
+UPDATE: As of May 8th, 2020, this project has been completed and can be viewed below:
+https://ninthheaven.shinyapps.io/UK_GER_Charts/
 

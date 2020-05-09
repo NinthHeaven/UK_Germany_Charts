@@ -26,7 +26,10 @@ library(gt)
 library(gganimate)
 library(transformr)
 
-# Below I read in the entire charts discography
+# Below I read in the entire charts discography. I decided to just read in the
+# gt tables here and have the actual code in the rmd file because the shiny app
+# loaded much slower when it had to run the code for the three if else
+# conditions.
 
 yearly_uk_artists <- read_rds("yearly_uk_artists.rds")
 yearly_uk_songs <- read_rds("yearly_uk_songs.rds")
@@ -35,22 +38,41 @@ yearly_ger_artists <- read_rds("yearly_ger_artists.rds")
 yearly_ger_songs <- read_rds("yearly_ger_songs.rds")
 yearly_ger_genres <- read_rds("yearly_ger_genres.rds")
 
-# Below I read the entire chart data
+# Below I read the entire chart data. I initially was going to do all the data
+# processing here but that caused major lag when loading the animated plots so
+# for now the Shiny reads in the features data without doing much with it. I am
+# keeping it here for whenever I want to return back to the project and figure
+# out how to do more analysis with the audio features in the uk and germany
+# datasets.
+
 uk_charts <- readRDS("uk_charts.rds")
 ger_charts <- readRDS("ger_charts.rds")
 
-# Below I read the data that I will use for the wordcloud
+# Below I read the data that I will use for the wordcloud. I decided to add a
+# wordcloud last minute because I realized I never actually compared the genres
+# in the UK and Germany and found which one had the most EDM influence. This was
+# used as a substitute for not being able to plot any interesting information
+# about the audio features.
 
 ukcloud <- readRDS("ukcloud.rds")
 gercloud <- readRDS("gercloud.rds")
 
-# Define UI for application that draws a histogram
+# I decided to apply the theme simplex because I really enjoyed the design and
+# thought it matched the plots very well.
+
 ui <- navbarPage(theme = shinytheme("simplex"),
+    
     # Application title
     
     "A Decade in Dance: Comparing the 2000s UK and Germany Charts",
     
-    # Sidebar with a slider input for number of bins 
+    # Here I have the UK Chart Analysis data, where users can select what
+    # features they would like to see on the Shiny App and an animated plot
+    # showing the distribution of that audio feature over time will appear.
+    # Another tab is used to create a page where users can look at the top ten
+    # songs, artists, and the top 20 genres that were most prominent in the UK
+    # charts.
+    
     tabPanel(
         title = "UK Chart Analysis",
         h3("Looking at the UK Charts from 2000 - 2010"),
@@ -91,9 +113,14 @@ ui <- navbarPage(theme = shinytheme("simplex"),
             )
             )
         ),
+    
+    # The same thing is done in this tab with the German charts. Users can pick
+    # the feature they want to see and an animated plot will appear, and they
+    # can also view the top artists, songs, and genres in the German charts.
+    
     tabPanel(
-        title = "Germany Chart Analysis",
-        h3("Looking at the Germany Charts from 2000 - 2010"),
+        title = "German Chart Analysis",
+        h3("Looking at the German Charts from 2000 - 2010"),
         tags$div("Below are the features and artists/songs that were most prevalent in the 2000s German Charts."),
         tabsetPanel(
             tabPanel(
@@ -120,6 +147,7 @@ ui <- navbarPage(theme = shinytheme("simplex"),
             ),
             tabPanel(
                 h6("Most Popular in the Charts"),
+                p("Fun fact: The second most popular song on the chart is the only EDM song to appear in the decade song analysis."),
                 br(),
                 sidebarPanel(
                     selectInput("yearly_ger", "Choose What You Would Like to View:",
@@ -131,9 +159,16 @@ ui <- navbarPage(theme = shinytheme("simplex"),
             )
         )
     ),
+    
+    # Here is where users can look at the most popular genres per year in the UK
+    # or German charts. I added this very last minute because I never actually
+    # talked about the genres that appeared in the charts per year. I felt
+    # that including a word cloud would allow users, as well as myself, to see
+    # the changing music culture in the UK and Germany.
+    
     tabPanel(
         "UK-GER Genre Comparison",
-        p("Here you can look at the most popular genres in the UK and Germany in the 2000s. Do you notice any major changes in which genres dominated the charts in the 2000s?"),
+        p("Here you can look at the most popular genres in the UK and Germany in the 2000s. Do you notice any major changes in which genres dominated the charts in the 2000s? Do you also see any new genres emerging from old genres towards the end of the 2000s?"),
         br(),
         sidebarPanel(
             selectInput("uk_ger_comp", "Choose the country you would like to view:",
@@ -143,8 +178,19 @@ ui <- navbarPage(theme = shinytheme("simplex"),
         ),
         mainPanel(
             plotOutput("wordcloud")
-        )
+        ),
+        br(),
+        h3("Genre Analysis"),
+        p("When looking at the most popular genres in the charts, you can see that although dance pop remained a consistent popular genre, other genres started to become more popular in the charts towards the end of the 2000s."),
+        p("In the UK, urban contemporary, girl groups, and different kids of pop music (europop, pop rap, etc.) were the most popular genres in the early 2000s. Although girl groups started to fade from the charts towards the end of the decade, hip hop, r&b, and rap started to rise up in popularity. Additionally, in the early 2000s, influences from the eurodance scene in the 90s is seen in the charts as bubblegum dance and europop were popular genres in the charts."),
+        p("In Germany, EDM was extremely dominant in the charts up until the mid-2000s. Genres such as eurodance, bubblegum dance, (german) techno, and trance were most prominent in the charts alongside dance pop. Towards the end of the 2000s, more rock, rap, and urban contemporary music started to fill up the charts."),
+        p("It is important to note that although dance pop is shown as the most prominent genre in both charts in the early 2000s, this does not mean that almost all the songs fell under the dance pop genre (even though many did!). When analyzing audio genres with Spotify, a song is often flagged under multiple genre depending on whether it has elements consistent with the genre or if the style is similar. Thus, a rock song might have some dance pop element and be flagged as dance pop and rock alongside other genres, even though it would be considered rock.")
+        
     ),
+    
+    # The about page is here, where I talk about why I started the project, how
+    # I gathered my data, and give information about myself.
+    
     tabPanel(
         "About",
         h3("Interlude"),
@@ -153,6 +199,14 @@ ui <- navbarPage(theme = shinytheme("simplex"),
         h3("The Current Project"),
         p("This project aims to compare two countries that had a seemingly strong EDM following in the 90s and early 2000s, the United Kingdom and Germany, and see if the chart rankings match the expected results (see above). If what was mentioned above is true, there should be significantly more EDM songs in the Germany charts from 2000-2010 compared to the UK. It will also be useful to see how the genres that dominated the charts have changed over the first decade of this millenia."),
         br(),
+        h3("How Was This Data Gathered?"),
+        p("I used the official German charts website and a UK charts listing website (sources below) to get the charts information for the 2000s. For audio analysis and data gathering, I used Spotify along with the spotifyr package to read and analyze all my data. I should note that some information is missing on the website, mostly due to only being able to analyze music that is already available in the US Spotify market."),
+        br(),
+        h3("Sources"),
+        p("The following information was gathered from these websites:"),
+        tags$a(href="http://www.uk-charts.top-source.info/index.shtml", "UK Charts Top-Source"),
+        br(),
+        tags$a(href="https://www.offiziellecharts.de/", "Offizielle Deutsche Charts"),
         br(),
         h3("About Me"),
         p("My name is Saul Soto, and I am currently a sophomore at Harvard University studying Psychology and Computer Science. For more information about my project, or if you're an EDM fan like me and want to exchange songs, hit me up at ssoto1@college.harvard.edu.")
@@ -164,8 +218,14 @@ server <- function(input, output) {
 
     output$UKCharts <- renderImage({
         
-        # Creating a temp file to save the output of the gganimate plot. I found
-        # this solution on StackOverflow.
+        # Originally, I had created a temp file here to store the animated plots
+        # and display them based on the user's input, but that caused the
+        # shinyapp to load extremely slow. Instead, I already saved and loaded
+        # the animated plots as gifs, and have them displayed based on the
+        # user's input. This ends up working much better and creates for a more
+        # smooth experience for the user! I did have to add deleteFile = FALSE
+        # at the end because I noticed that my gifs kept getting deleted every
+        # time they were displayed on the page :(.
         
         if(input$feature == "Danceability"){
             list(src = "uk_danceability.gif",
@@ -187,7 +247,8 @@ server <- function(input, output) {
     
     output$GERCharts <- renderImage({
         
-        # Create temporary file to store animated plot.
+        # The same thing I did for the UK animated plots was done here.
+        
         if(input$feature_ger == "Danceability"){
             list(src = "ger_danceability.gif",
                  contentType = 'image/gif')
@@ -207,6 +268,10 @@ server <- function(input, output) {
     }, deleteFile = FALSE)
     
     output$UKAnalysis <- render_gt({
+        
+        # Here I load the gt tables based on the user's input (same as the chunk
+        # of code below)
+        
         if(input$yearly_uk == "Artists"){
             yearly_uk_artists
         }
@@ -231,6 +296,17 @@ server <- function(input, output) {
     })
     
     output$wordcloud <- renderPlot({
+        
+        #I did not need to include a year condition like I had originally for
+        #the features analysis because I realized that I could treat the year
+        #input as a variable. Depending on which country the user selects, I
+        #load the genre datasets for the respective country and filter the year
+        #out by the user's input. Then, I create a wordcloud from the new
+        #dataframe that was formed. Note: The wordcloud did not display all the
+        #genres until I added the scale argument. Furthermore, wordcloud2 did
+        #not work as intended, probably due to the dataset being grouped by
+        #year.
+        
         if(input$uk_ger_comp == "United Kingdom"){
            uk_wordcloud <- ukcloud %>%
                filter(year == input$year_input)
